@@ -3,6 +3,7 @@
  */
 package com.revencoft.connection_pool;
 
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -14,7 +15,7 @@ import com.revencoft.connection_pool.connection.factory.ConnectionFactory;
  * @version
  */
 public class ConnectionPoolFactoryBean extends Pool<Connection> implements
-		FactoryBean<Pool<Connection>>, InitializingBean {
+		FactoryBean<Pool<Connection>>, InitializingBean, DisposableBean {
 
 	private ConnectionPoolConfig poolConfig;
 	private String connClazz;
