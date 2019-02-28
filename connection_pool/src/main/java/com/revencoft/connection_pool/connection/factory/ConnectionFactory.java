@@ -7,9 +7,12 @@ import org.apache.commons.lang3.Validate;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.PooledObjectFactory;
 import org.apache.commons.pool2.impl.DefaultPooledObject;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.revencoft.connection_pool.Connection;
+import com.revencoft.connection_pool.connection.config.ConfigurableConnection;
+import com.revencoft.connection_pool.connection.config.ConnectionConfig;
 
 /**
  * @author mengqingyan
@@ -17,19 +20,19 @@ import com.revencoft.connection_pool.Connection;
  */
 public class ConnectionFactory implements PooledObjectFactory<Connection>{
 
-	private static final Logger log = Logger.getLogger(ConnectionFactory.class);
-	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 	private Class<?> connClazz;
-	
+	private ConnectionConfig connectionConfig;
 	
 	/**
 	 * @param connClazz
 	 */
-	public ConnectionFactory(Class<?> connClazz) {
+	public ConnectionFactory(Class<?> connClazz, ConnectionConfig connectionConfig) {
 		super();
 		Validate.isTrue(Connection.class.isAssignableFrom(connClazz),
 				"传入的class必须是com.revencoft.connection_pool.Connection的子类");
 		this.connClazz = connClazz;
+		this.connectionConfig = connectionConfig;
 	}
 
 
@@ -54,8 +57,16 @@ public class ConnectionFactory implements PooledObjectFactory<Connection>{
 
 	public PooledObject<Connection> makeObject() throws Exception {
 		Connection connection = (Connection) connClazz.newInstance();
+		initConnection(connection);
 		connection.connect();
 		return new DefaultPooledObject<Connection>(connection);
+	}
+
+	private void initConnection(Connection connection) {
+		if(connection instanceof ConfigurableConnection) {
+			ConfigurableConnection cc = (ConfigurableConnection) connection;
+			cc.config(connectionConfig);
+		}
 	}
 
 	public void passivateObject(PooledObject<Connection> pooledConn) throws Exception {

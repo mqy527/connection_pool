@@ -3,12 +3,17 @@ package com.revencoft.connection_pool;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * 
  * @author mengqingyan
  *
  */
 public class ConnectionInvocationHandler implements InvocationHandler {
+
+	private final Logger logger = LoggerFactory.getLogger(getClass());
 
 	private final Pool<Connection> connectionPool;
 	
@@ -26,6 +31,7 @@ public class ConnectionInvocationHandler implements InvocationHandler {
 		Connection delegate = null;
 		try {
 			delegate = getConnection();
+			logger.debug("using delegate connection: {}", delegate);
 			result = method.invoke(delegate, args);
 		} catch (Exception e) {
 			this.connectionPool.returnBrokenResource(delegate);

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+
+    <context:property-placeholder location="classpath:properties/application-env.properties"/>
+
+    <bean id="poolConfig" class="com.revencoft.connection_pool.connection.config.ConnectionPoolConfig">
+        <property name="maxTotal" value="10"/>
+        <property name="minIdle" value="1"/>
+        <property name="maxIdle" value="5"/>
+        <property name="maxWaitMillis" value="15000"/>
+    </bean>
+
+    <bean id="sFtpConnectionConfig" class="com.revencoft.connection_pool.connection.config.FtpConnectionConfig">
+        <property name="host" value="${sftp.host}"/>
+        <property name="port" value="${sftp.port}"/>
+        <property name="username" value="${sftp.user}"/>
+        <property name="password" value="${sftp.password}"/>
+        <property name="rootDir" value="${sftp.sftpRootDir}"/>
+    </bean>
+
+    <bean id="sftpConnection" class="com.revencoft.connection_pool.ConnectionFactoryBean">
+        <property name="connClazz" value="com.revencoft.connection_pool.connection.sftp.JschSftpConnection"/>
+        <property name="poolConfig" ref="poolConfig"/>
+        <property name="connectionConfig" ref="sFtpConnectionConfig"/>
+    </bean>
+
+
+</beans>

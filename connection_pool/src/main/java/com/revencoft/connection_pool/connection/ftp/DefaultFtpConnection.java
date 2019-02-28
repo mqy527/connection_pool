@@ -6,7 +6,9 @@ package com.revencoft.connection_pool.connection.ftp;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author mengqingyan
@@ -14,8 +16,7 @@ import org.apache.log4j.Logger;
  */
 public class DefaultFtpConnection implements FtpConnection<String, String> {
 
-	private static final Logger log = Logger.getLogger(DefaultFtpConnection.class);
-	
+	private final Logger log = LoggerFactory.getLogger(getClass());
 	private boolean connected = false;
 	
 	public boolean connect() {

@@ -1,12 +1,8 @@
 package com.revencoft.connection_pool;
 
-import java.io.IOException;
-import java.util.NoSuchElementException;
-
 import org.apache.commons.pool2.ObjectPool;
 import org.apache.commons.pool2.PooledObject;
 import org.apache.commons.pool2.impl.GenericObjectPool;
-import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.junit.Test;
 
 import com.revencoft.connection_pool.connection.config.ConnectionPoolConfig;
@@ -21,7 +17,7 @@ public class AppTest {
 	
 	@Test
 	public void testFtpConn() throws Exception {
-		ConnectionFactory factory = new ConnectionFactory(DefaultFtpConnection.class);
+		ConnectionFactory factory = new ConnectionFactory(DefaultFtpConnection.class, null);
 		PooledObject<Connection> pooledObject = factory.makeObject();
 		Connection conn = pooledObject.getObject();
 		System.out.println(conn);
@@ -29,7 +25,7 @@ public class AppTest {
 	
 	@Test
 	public void testPool() {
-		ConnectionFactory factory = new ConnectionFactory(DefaultFtpConnection.class);
+		ConnectionFactory factory = new ConnectionFactory(DefaultFtpConnection.class,null);
 		ConnectionPoolConfig config = new ConnectionPoolConfig();
 		config.setLifo(false);  
 		config.setMaxTotal(5); 

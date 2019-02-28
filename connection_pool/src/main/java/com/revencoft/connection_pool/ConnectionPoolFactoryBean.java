@@ -7,6 +7,7 @@ import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
+import com.revencoft.connection_pool.connection.config.ConnectionConfig;
 import com.revencoft.connection_pool.connection.config.ConnectionPoolConfig;
 import com.revencoft.connection_pool.connection.factory.ConnectionFactory;
 
@@ -19,6 +20,7 @@ public class ConnectionPoolFactoryBean extends Pool<Connection> implements
 
 	private ConnectionPoolConfig poolConfig;
 	private String connClazz;
+	private ConnectionConfig connectionConfig;
 	
 	
 
@@ -45,7 +47,7 @@ public class ConnectionPoolFactoryBean extends Pool<Connection> implements
 	public void afterPropertiesSet() throws Exception {
 		
 		Class<?> clazz = Class.forName(connClazz);
-		super.initPool(poolConfig, new ConnectionFactory(clazz));
+		super.initPool(poolConfig, new ConnectionFactory(clazz, connectionConfig));
 		
 	}
 
@@ -57,4 +59,7 @@ public class ConnectionPoolFactoryBean extends Pool<Connection> implements
 		this.connClazz = connClazz;
 	}
 
+	public void setConnectionConfig(ConnectionConfig connectionConfig) {
+		this.connectionConfig = connectionConfig;
+	}
 }

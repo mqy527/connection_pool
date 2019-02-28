@@ -10,7 +10,7 @@ package com.revencoft.connection_pool.exception;
 public class ConnectionException extends RuntimeException {
 
 	/**
-	 * @param string
+	 * @param msg
 	 * @param e
 	 */
 	public ConnectionException(String msg, Exception e) {

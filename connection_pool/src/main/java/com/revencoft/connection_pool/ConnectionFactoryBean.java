@@ -10,6 +10,7 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
+import com.revencoft.connection_pool.connection.config.ConnectionConfig;
 import com.revencoft.connection_pool.connection.config.ConnectionPoolConfig;
 import com.revencoft.connection_pool.connection.factory.ConnectionFactory;
 
@@ -22,7 +23,7 @@ public class ConnectionFactoryBean extends Pool<Connection> implements
 
 	private ConnectionPoolConfig poolConfig;
 	private Class<?> connClazz;
-	
+	private ConnectionConfig connectionConfig;
 	
 
 	@Override
@@ -48,7 +49,7 @@ public class ConnectionFactoryBean extends Pool<Connection> implements
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		super.initPool(poolConfig, new ConnectionFactory(this.connClazz));
+		super.initPool(poolConfig, new ConnectionFactory(this.connClazz, connectionConfig));
 		
 	}
 
@@ -61,4 +62,7 @@ public class ConnectionFactoryBean extends Pool<Connection> implements
 		Assert.isAssignable(Connection.class, this.connClazz);
 	}
 
+	public void setConnectionConfig(ConnectionConfig connectionConfig) {
+		this.connectionConfig = connectionConfig;
+	}
 }
