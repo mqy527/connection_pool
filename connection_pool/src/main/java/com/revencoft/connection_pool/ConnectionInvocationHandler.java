@@ -29,15 +29,19 @@ public class ConnectionInvocationHandler implements InvocationHandler {
 		
 		Object result = null;
 		Connection delegate = null;
+		boolean ex = false;
 		try {
 			delegate = getConnection();
 			logger.debug("using delegate connection: {}", delegate);
 			result = method.invoke(delegate, args);
 		} catch (Exception e) {
+			ex = true;
 			this.connectionPool.returnBrokenResource(delegate);
 			throw e;
 		} finally {
-			this.connectionPool.returnResource(delegate);
+			if(!ex) {
+				this.connectionPool.returnResource(delegate);
+			}
 		}
 		return result;
 	}
